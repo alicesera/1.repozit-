@@ -20,13 +20,14 @@ SELECT
 	year,
 	ROUND(average_food_price, 2) AS average_food_price,
 	ROUND(average_wage, 2) AS average_wage,
-	ROUND(((average_food_price - prev_year_avg_food_price) / prev_year_avg_food_price) * 100, 2) AS food_price_growth,
-	ROUND(((average_wage - prev_year_avg_wage) / prev_year_avg_wage) * 100, 2) AS wage_growth
+	ROUND((average_food_price/prev_year_avg_food_price)*100-100, 2) AS food_price_growth,
+	ROUND((average_wage/prev_year_avg_wage) * 100-100, 2) AS wage_growth,
+	ROUND(((average_food_price/prev_year_avg_food_price)*100) - ((average_wage/prev_year_avg_wage)*100), 2) AS growth_difference
 FROM
 	t_price_wage
 WHERE
-	(((average_food_price - prev_year_avg_food_price) / prev_year_avg_food_price) * 100) > (((average_wage - prev_year_avg_wage) / prev_year_avg_wage) * 110)
+	((average_food_price/prev_year_avg_food_price)*100)>((average_wage/prev_year_avg_wage)*100)
+	AND (((average_food_price/prev_year_avg_food_price)*100)-((average_wage/prev_year_avg_wage)*100))>10
 GROUP BY
 	food_category;
 	
-
