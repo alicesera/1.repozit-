@@ -29,5 +29,6 @@ WHERE
 	((average_food_price/prev_year_avg_food_price)*100)>((average_wage/prev_year_avg_wage)*100)
 	AND (((average_food_price/prev_year_avg_food_price)*100)-((average_wage/prev_year_avg_wage)*100))>10
 GROUP BY
-	food_category;
+	food_category
+ORDER BY growth_difference DESC;
 	
