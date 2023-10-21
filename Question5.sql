@@ -10,7 +10,7 @@ SELECT
 FROM
 	(
 	SELECT
-		tp.payroll_year AS YEAR,
+		tp.payroll_year AS year,
 		ROUND(AVG(tp.food_price), 2) AS avg_food_price,
 		ROUND(AVG(tp.aver_wage), 2) AS aver_wage,
 		ROUND(ts.GDP, 2) AS rounded_GDP,
@@ -37,7 +37,7 @@ FROM
 	WHERE
 		ts.country = 'Czech Republic'
 	GROUP BY
-		YEAR
+		year
 ) AS subquery
 WHERE
 	GDP_growth_in_percent > 3
