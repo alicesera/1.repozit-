@@ -6,37 +6,46 @@ RENAME COLUMN year_relevant_to_price TO year;
 -- vytvoření spojené tabulky
 
 SELECT
-	tp.payroll_year AS year,
-	AVG(tp.food_price) AS avg_food_price,
-	ROUND(AVG(tp.aver_wage)) AS aver_wage,
-	ROUND(ts.GDP) AS rounded_GDP,
-	ROUND((tp.aver_wage / LAG(tp.aver_wage) OVER (ORDER BY tp.payroll_year) - 1) * 100) AS aver_wage_growth_in_percent,
-	ROUND((tp.food_price / LAG(tp.food_price) OVER (ORDER BY tp.payroll_year) - 1) * 100) AS food_price_growth_in_percent,
-	ROUND((ts.GDP / LAG(ts.GDP) OVER (ORDER BY ts.year) - 1) * 100) AS GDP_growth_percentage
+	*
 FROM
-	t_alice_sera_project_sql_primary_final tp
-LEFT JOIN t_alice_sera_project_sql_secondary_final ts ON
-	tp.payroll_year = ts.year
+	(
+	SELECT
+		tp.payroll_year AS YEAR,
+		ROUND(AVG(tp.food_price), 2) AS avg_food_price,
+		ROUND(AVG(tp.aver_wage), 2) AS aver_wage,
+		ROUND(ts.GDP, 2) AS rounded_GDP,
+		ROUND(
+            (LAG(AVG(tp.food_price), 0) OVER (ORDER BY tp.payroll_year) / LAG(AVG(tp.food_price), 1) OVER (ORDER BY tp.payroll_year) * 100) - 100,
+            2
+        ) AS food_price_growth_in_percent,
+		ROUND(
+            (LAG(AVG(tp.aver_wage), 0) OVER (ORDER BY tp.payroll_year) / LAG(AVG(tp.aver_wage), 1) OVER (ORDER BY tp.payroll_year) * 100) - 100,
+            2
+        ) AS wage_growth_in_percent,
+		ROUND(
+            (LAG(AVG(ts.GDP), 0) OVER (ORDER BY ts.year) / LAG(AVG(ts.GDP), 1) OVER (ORDER BY ts.year) * 100) - 100,
+            2
+        ) AS GDP_growth_in_percent,
+		ROUND(
+            (LAG(AVG(ts.GDP), 1) OVER (ORDER BY ts.year) / LAG(AVG(ts.GDP), 2) OVER (ORDER BY ts.year) * 100) - 100,
+            2
+        ) AS prev_year_GDP_growth_in_percent
+	FROM
+		t_alice_sera_project_sql_primary_final tp
+	LEFT JOIN t_alice_sera_project_sql_secondary_final ts ON
+		tp.payroll_year = ts.year
+	WHERE
+		ts.country = 'Czech Republic'
+	GROUP BY
+		YEAR
+) AS subquery
 WHERE
-	ts.country = 'Czech Republic'
-GROUP BY
-	year;
+	GDP_growth_in_percent > 3
+	AND food_price_growth_in_percent > 2
+	AND wage_growth_in_percent > 2
+	OR prev_year_GDP_growth_in_percent > 3
+	AND wage_growth_in_percent > 2
+	AND food_price_growth_in_percent > 2
 
--- pro lepší přehlednost výsledné tabulky
 
-SELECT
-	tp.payroll_year AS year,
-	ROUND((tp.aver_wage / LAG(tp.aver_wage) OVER (ORDER BY tp.payroll_year) - 1) * 100) AS aver_wage_growth_in_percent,
-	ROUND((tp.food_price / LAG(tp.food_price) OVER (ORDER BY tp.payroll_year) - 1) * 100) AS food_price_growth_in_percent,
-	ROUND((ts.GDP / LAG(ts.GDP) OVER (ORDER BY ts.year) - 1) * 100) AS GDP_growth_percentage
-FROM
-	t_alice_sera_project_sql_primary_final tp
-LEFT JOIN t_alice_sera_project_sql_secondary_final ts ON
-	tp.payroll_year = ts.year
-WHERE
-	ts.country = 'Czech Republic'
-GROUP BY
-	year;
-
-    
    
