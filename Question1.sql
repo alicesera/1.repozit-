@@ -1,5 +1,5 @@
 -- 1. tabulka srovnávací min. a max. rok, odvětví, ve kterých mzdy neklesly
-
+-- alicesera_
 SELECT
 	industry_name,
 	AVG(aver_wage) AS average_wage,
