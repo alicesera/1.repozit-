@@ -17,7 +17,7 @@ FROM
 	GROUP BY
 		food_category,
 		year
-) AS t1
+) AS average_food_price_changes_by_category_and_year
 GROUP BY
 	food_category
 ORDER BY
