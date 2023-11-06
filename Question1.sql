@@ -1,5 +1,5 @@
--- 1. tabulka srovnávací min. a max. rok, odvětví, ve kterých mzdy neklesly
--- alicesera_
+-- Table 1: Comparison of the minimum and maximum years for sectors where wages did not decrease.
+
 SELECT
 	industry_name,
 	AVG(aver_wage) AS average_wage,
@@ -15,7 +15,7 @@ HAVING
 	MIN(aver_wage) <= MAX(aver_wage);
 
 
--- tabulka k detailnější analýze
+-- Table for more detailed analysis
 
 SELECT
 	industry_name,
@@ -32,7 +32,7 @@ GROUP BY
 HAVING
 	MIN(aver_wage) <= MAX(aver_wage);
 	
--- odvětví, ve kterých mzdy klesaly
+-- Sectors in which wages fell
 
 SELECT
 	industry_name,
