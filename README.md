@@ -27,4 +27,4 @@
 # SQL Queries Answering the Questions
   see individual .sql files
 # Authors
-  Ing. Alice Šerá, e-mail: alice.sera@seznam.cz
+  Ing. Alice Šerá, e-mail: sera.alice@seznam.cz
