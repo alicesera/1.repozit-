@@ -1,9 +1,9 @@
--- přejmenování sloupečku v tabulce
+-- renaming a column in the table
 
 ALTER TABLE t_alice_sera_project_sql_primary_final 
 RENAME COLUMN year_relevant_to_price TO year;
 
--- vytvoření spojené tabulky
+-- creating a linked table
 
 SELECT
 	*
